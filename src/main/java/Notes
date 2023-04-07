@@ -1,0 +1,249 @@
+
+course udemy
+Name-Title
+Learn REST API with Java,
+Spring Framework & JPA Using JSON. Spring AOP, Lombok, Swagger, Logging, JPQL, MySQL, Heroku
+................................
+- run as- maven build - clean install - apply
+- now jar file created
+- go to target folder - where snapshot- in folder name showing where - type cmd
+-java jar filename
+C:\Users\akumar2490\Downloads\TEST TICKET\Rest-Api\target>java -jar Rest-Api-0.0.1-SNAPSHOT.jar
+-for lambook install lambook application first in system
+-to check setter & getter use StudentResponse.get or set showing suggestion means working.
+-@Data combination of all model such as getter & setter
+- to check all agrument & non argunment ,
+constructor create new class using new keyword if show suggestion working well
+
+.....................................
+-jpa(Java persistence API) orm(Object Relational Model) springboot(mysql)
+-hibernate is an one of the implemetaion of JPa.
+-JPQL
+- jpaRepository contains crud+paging
+- crudRepository only contains crud
+-Getting hikari ,mysql,datasource error due to spring version
+
+................................................
+Get JSON
+http://localhost:8080/api/student/geT
+http://localhost:8080/api/student/getAll
+...............................................
+JSON CREATE(POST REQUEST) - http://localhost:8080/api/student/create
+
+{
+    "first_name":"maa",
+    "lastName":"Rajvanshi",
+    "email":"raj@gmail.com"
+}
+
+................................................................
+Put JSON - http://localhost:8080/api/student/update
+{
+    "id":4,
+    "firstName": "Vansh-1"
+
+    }
+
+ ...........................................
+ delete api
+ delete?id=4
+ /delete/4
+ RequestParam method-
+ http://localhost:8080/api/student/delete?id=1
+
+ ...........................................
+ Spring Jpa Data Queries
+ -JPA Queries
+
+get fistName
+-http://localhost:8080/api/student/getFirstName/Ankit
+
+Try other things self like getbylastname etc etc
+
+..................................................
+And proxy get
+select * from student where first_name ='ankit' AND last_name='rajvanshi'
+we will use method proxy
+http://localhost:8080/api/student/getByFirstNameAndLastName/Ankit/Rajvanshi
+
+...................................................
+Or Query - get
+select * from student where first_name ='ankit' OR last_name='rajvanshi'
+http://localhost:8080/api/student/getByFirstNameOrLastName/maa/purbey
+
+...........................................
+InQuery
+http://localhost:8080/api/student/getByFirstNameIn
+Json-get
+{
+    "firstNames":["Ankit","maa"]
+}
+output-
+Hibernate: select student0_.id as id1_0_, student0_.email as email2_0_,
+student0_.first_name as first_na3_0_,
+student0_.last_name as last_nam4_0_ from student student0_ where student0_.first_name in (? , ?)
+.................................................
+Pagination
+Formula - (Page No-1)*Page Size
+get request
+http://localhost:8080/api/student/getAllWithPagination?pageNo=1&pageSize=10
+- we can increase page 1,2,3 for more page
+error resolved when using right import
+import org.springframework.data.domain.Pageable;
+getting 10 request
+..................................................
+sorting
+select * from student order by first_name,last_name desc (descending)
+get request
+http://localhost:8080/api/student/getAllWithSorting
+
+
+......................................................
+@Transiant annotation it is for only internal purpose like calculating
+1- merge first name + last name
+get request
+http://localhost:8080/api/student/getAll
+2- post request
+http://localhost:8080/api/student/create
+json
+{
+    "first_name":"ankit",
+    "lastName":"Rajvanshi",
+    "email":"raj@gmail.com"
+}
+
+working all without creating column not getting exception error
+
+.............................................................................
+Like Query
+select * from student where first_name like '$on$'
+it will find this word and give u results
+get request
+http://localhost:8080/api/student/like/an
+
+..........................................................
+starts with query using jpa
+first letter starting they pick
+select * from student where first_name like 'ank$'
+get request
+http://localhost:8080/api/student/startsWith/ankit
+
+try with other ways
+Find all students whose firstName ends with "son" word.
+.......................................................
+JPQL - similar to SQL Queries
+jpql select query
+get request
+http://localhost:8080/api/student/gettingByFirstNameOrLastName/Ankit/Rajvanshi
+
+.................
+JPQL Update query
+//param is useing for d/f names
+put request
+http://localhost:8080/api/student/updateFirstName/3/sagar
+.................
+JPQL Delete query
+delete request
+http://localhost:8080/api/student/deleteFirstName/ankit
+
+................................................................
+Relationships entity one to one relationship
+foreign key
+post request-
+http://localhost:8080/api/student/create
+json
+{
+    "first_name":"ankit",
+    "lastName":"Rajvanshi",
+    "email":"raj@gmail.com",
+    "street":"Harsh Vihar",
+    "city":"Delhi"
+}
+to check go to mysql- foreignkey generate
+select * from address
+select * from student;
+......................................................
+JOIN RELATIONSHIP
+primary key- a.id
+foreign key- s.address_id
+select * from student s inner join address a on s.address_id =a.id where a.city='Delhi'
+get request
+http://localhost:8080/api/student/getByCity/delhi
+
+//JPQL QYERY METHOD JOIN
+    @Query("From Student where address.city = :city")
+SAME LINK USED HERE SAME RESULTS
+........................................................
+Lazy Load
+fetching-eager
+if u don't provide anything it will eager loading default
+
+.............................................................
+Bidirectional relationship one to one
+@OneToOne(mappedBy="Address")
+
+......................................................
+one to many
+NEED TO CHECK AGAIN DOUBT
+select * from student
+select * from subject
+POST REQUEST
+http://localhost:8080/api/student/create
+JSON
+{
+    "first_name":"ankit",
+    "lastName":"Rajvanshi",
+    "email":"raj@gmail.com",
+    "street":"harsh vihar",
+    "city":"Delhi",
+    "subjectsLearning":[
+        {
+            "subjectName":"java",
+            "marksObtained":80.00
+        }, {
+            "subjectName":"APi",
+            "marksObtained":50.00
+        },
+         {
+            "subjectName":"SpringBoot",
+            "marksObtained":90.00
+        }
+    ]
+    }
+
+    http://localhost:8080/api/student/create
+
+    TO RESOLVE ERROR
+       @ElementCollection(targetClass=Integer.class)
+......................................................................
+
+Open AI Swagger API
+create api documentation automatically
+add dependency for swagger in pom.xml
+Error resolved when comment version of all dependency
+swagger error came
+#After this swagger error gone add in application properties
+spring.mvc.pathmatch.matching-strategy = ANT_PATH_MATCHER
+link
+http://localhost:8080/swagger-ui.html
+Note- Open ui Documenatation both are same, same link , another tool
+add dependency
+remove anotation
+same link enter
+...............................................................................
+D/F Level of Logging
+error<warn<info<debug<trace
+log are using for troubleshooting
+starter web dependency no need other for logging
+
+...........................................
+AOP
+Advice,Before,After
+
+..................................
+Schedular
+Corn
+
+........................................
+Heroku deployment
+...................
